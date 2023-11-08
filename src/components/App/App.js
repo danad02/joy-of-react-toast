@@ -7,7 +7,7 @@ import Footer from "../Footer";
 
 function App() {
   return (
-    <ToastProvider>
+    <ToastProvider limit={4} timeout={3000}>
       <ToastPlayground />
       <ToastShelf />
       <Footer />

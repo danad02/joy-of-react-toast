@@ -27,6 +27,20 @@ export const ToastProvider = ({ children }) => {
     [addToast, dismissToast, toasts]
   );
 
+  React.useEffect(() => {
+    const dismissToasts = (e) => {
+      if (e.code === "Escape") {
+        setToasts([]);
+      }
+    };
+
+    window.addEventListener("keydown", dismissToasts);
+
+    return () => {
+      window.removeEventListener("keydown", dismissToasts);
+    };
+  }, []);
+
   return (
     <ToastContext.Provider value={value}>{children}</ToastContext.Provider>
   );

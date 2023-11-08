@@ -1,12 +1,23 @@
-import React from 'react';
+import React from "react";
 
-import Button from '../Button';
+import Button from "../Button";
 
-import styles from './ToastPlayground.module.css';
+import styles from "./ToastPlayground.module.css";
 
-const VARIANT_OPTIONS = ['notice', 'warning', 'success', 'error'];
+const VARIANT_OPTIONS = ["notice", "warning", "success", "error"];
 
 function ToastPlayground() {
+  const [message, setMessage] = React.useState("");
+  const [variant, setVariant] = React.useState();
+
+  const id = React.useId();
+  const messageFieldId = `${id}-message`;
+  const variantFieldId = `${id}-variant`;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
+
   return (
     <div className={styles.wrapper}>
       <header>
@@ -14,48 +25,60 @@ function ToastPlayground() {
         <h1>Toast Playground</h1>
       </header>
 
-      <div className={styles.controlsWrapper}>
+      <form onSubmit={handleSubmit} className={styles.controlsWrapper}>
         <div className={styles.row}>
           <label
-            htmlFor="message"
+            htmlFor={messageFieldId}
             className={styles.label}
-            style={{ alignSelf: 'baseline' }}
+            style={{ alignSelf: "baseline" }}
           >
             Message
           </label>
           <div className={styles.inputWrapper}>
-            <textarea id="message" className={styles.messageInput} />
+            <textarea
+              className={styles.messageInput}
+              id={messageFieldId}
+              value={message}
+              onChange={(event) => {
+                setMessage(event.target.value);
+              }}
+              required
+              minLength={1}
+            />
           </div>
         </div>
 
         <div className={styles.row}>
           <div className={styles.label}>Variant</div>
-          <div
-            className={`${styles.inputWrapper} ${styles.radioWrapper}`}
-          >
-            <label htmlFor="variant-notice">
-              <input
-                id="variant-notice"
-                type="radio"
-                name="variant"
-                value="notice"
-              />
-              notice
-            </label>
-
-            {/* TODO Other Variant radio buttons here */}
+          <div className={`${styles.inputWrapper} ${styles.radioWrapper}`}>
+            {VARIANT_OPTIONS.map((variantOption) => {
+              const radioId = `${variantFieldId}-${variantOption}`;
+              return (
+                <label key={radioId} htmlFor={radioId}>
+                  <input
+                    id={radioId}
+                    type="radio"
+                    name={variantFieldId}
+                    value={variantOption}
+                    checked={variant === variantOption}
+                    onChange={(event) => {
+                      setVariant(event.target.value);
+                    }}
+                  />
+                  {variantOption}
+                </label>
+              );
+            })}
           </div>
         </div>
 
         <div className={styles.row}>
           <div className={styles.label} />
-          <div
-            className={`${styles.inputWrapper} ${styles.radioWrapper}`}
-          >
-            <Button>Pop Toast!</Button>
+          <div className={`${styles.inputWrapper} ${styles.radioWrapper}`}>
+            <Button type="submit">Pop Toast!</Button>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
